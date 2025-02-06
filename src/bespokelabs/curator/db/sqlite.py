@@ -1,14 +1,16 @@
-"""Database class for storing metadata for Bella runs."""
+"""SQLite implementation of the metadata database."""
 
 import os
 import sqlite3
 
+from bespokelabs.curator.db.base import MetadataDB
 
-class MetadataDB:
-    """Database class for storing Bella run metadata."""
+
+class SQLiteDB(MetadataDB):
+    """SQLite implementation of the metadata database."""
 
     def __init__(self, db_path: str):
-        """Initialize the MetadataDB with a given database path.
+        """Initialize the SQLiteDB with a given database path.
 
         Args:
             db_path: Path to the SQLite database file.
@@ -67,7 +69,7 @@ class MetadataDB:
                 - model_name: Name of model used
                 - response_format: JSON schema of response format
                 - run_hash: Unique hash identifying the run
-                - batch_mode: Boolean indicating batch mode or online mode (True = batch, False = online)
+                - batch_mode: Boolean indicating batch mode or online mode
         """
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         with sqlite3.connect(self.db_path) as conn:
@@ -128,4 +130,4 @@ class MetadataDB:
                         "-",
                     ),
                 )
-            conn.commit()
+            conn.commit() 

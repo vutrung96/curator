@@ -11,7 +11,8 @@ from datasets import Dataset
 from pydantic import BaseModel
 from xxhash import xxh64
 
-from bespokelabs.curator.db import MetadataDB
+from bespokelabs.curator.db import create_metadata_db
+from bespokelabs.curator.db.factory import create_metadata_db
 from bespokelabs.curator.llm.prompt_formatter import PromptFormatter
 from bespokelabs.curator.request_processor._factory import _RequestProcessorFactory
 from bespokelabs.curator.request_processor.config import BackendParamsType
@@ -194,8 +195,8 @@ class LLM:
         disable_cache = os.getenv("CURATOR_DISABLE_CACHE", "").lower() in ["true", "1"]
         fingerprint = self._hash_fingerprint(dataset_hash, disable_cache)
 
-        metadata_db_path = os.path.join(curator_cache_dir, "metadata.db")
-        metadata_db = MetadataDB(metadata_db_path)
+        # Use the factory to create the appropriate database instance
+        metadata_db = create_metadata_db()
 
         # Get the source code of the prompt function
         prompt_func_source = _get_function_source(self.prompt_formatter.prompt_func)
